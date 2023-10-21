@@ -1,0 +1,57 @@
+_schema-version: '3.1'
+ID: saleordersidebyside
+version: 1.0.0
+description: "A simple CAP project."
+parameters:
+  enable-parallel-deployments: true
+build-parameters:
+  before-all:
+    - builder: custom
+      commands:
+        - npx cds build --production
+modules:
+  - name: saleordersidebyside-srv
+    type: nodejs
+    path: gen/srv
+    parameters:
+      buildpack: nodejs_buildpack
+    build-parameters:
+      builder: npm
+    provides:
+      - name: srv-api # required by consumers of CAP services (e.g. approuter)
+        properties:
+          srv-url: ${default-url}
+    requires:
+      - name: saleordersidebyside-destination
+      - name: s4hanaso-uaa
+
+  - name: saleordersidebyside
+    type: approuter.nodejs
+    path: app\router
+    parameters:
+      keep-existing-routes: true
+      disk-quota: 256M
+      memory: 256M
+    requires:
+      - name: srv-api
+        group: destinations
+        properties:
+          name: srv-api # must be used in xs-app.json as well
+          url: ~{srv-url}
+          forwardAuthToken: true
+      - name: s4hanaso-uaa
+
+resources:
+  - name: saleordersidebyside-destination
+    type: org.cloudfoundry.managed-service
+    parameters:
+      service-name: saleordersidebyside-destination
+  - name: s4hanaso-uaa
+    type: org.cloudfoundry.managed-service
+    parameters:
+      path: ./xs-security.json
+      service: xsuaa
+      service-plan: application
+      config:
+        xsappname: saleordersidebyside-${org}-${space}
+        tenant-mode: dedicated

@@ -1,0 +1,37 @@
+{
+  "name": "saleordersidebyside",
+  "version": "1.0.0",
+  "description": "A simple CAP project.",
+  "repository": "<Add your repository here>",
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "@sap/cds": "^7",
+    "@sap/xsenv": "^4.0.0",
+    "@sap/xssec": "^3",
+    "express": "^4",
+    "passport": "^0"
+  },
+  "devDependencies": {
+    "@cap-js/sqlite": "^1",
+    "@sap-cloud-sdk/generator": "^3.7.0",
+    "@sap/cds-dk": "^7"
+  },
+  "scripts": {
+    "start": "cds-serve"
+  },
+  "cds": {
+    "requires": {
+      "API_SALES_ORDER_SRV": {
+        "kind": "odata-v2",
+        "model": "srv/external/API_SALES_ORDER_SRV",
+        "credentials": {
+          "url": "https://my304870.s4hana.ondemand.com/",
+          "username": "P1940161775",
+          "password": "Timb@2022"
+        }
+      },
+      "auth": "xsuaa"
+    }
+  }
+}
