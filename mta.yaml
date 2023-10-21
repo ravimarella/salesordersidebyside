@@ -45,7 +45,9 @@ resources:
   - name: saleordersidebyside-destination
     type: org.cloudfoundry.managed-service
     parameters:
-      service-name: saleordersidebyside-destination
+      service: destination
+      service-plan: lite
+  
   - name: s4hanaso-uaa
     type: org.cloudfoundry.managed-service
     parameters:
